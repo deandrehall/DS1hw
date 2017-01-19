@@ -1,0 +1,292 @@
+if queue is full, do nothing - wait for notfull
+else if not actors arrival time > current time, wait for time
+else if i can work on them, add to queue
+
+#TODO!!!!!
+currently, when 2(or more) people enter the queue at the same time, everything gets fucked bc
+only one of them are added
+- check if multiple people are arriving at the same time (while loop???)
+
+int x,y;
+	int static time = retTime();
+	int breakCounter = 0;
+	string temp[4];
+	string temp2[4];
+	Queue Q2;
+	
+	
+	x = retHead();
+	temp[0] = person[x];
+	temp[1] = to_string(arrival[x]);
+	temp[2] = to_string(duration[x]);
+	temp[3] = to_string(remaining[x]);
+	Q2.enQueue(temp);
+	deQueue();
+	
+	//temp2[1] = to_string(20);
+	
+	while(!Q2.isEmpty()){
+		x = Q2.retHead();
+		temp[0] = Q2.person[x];
+		temp[1] = to_string(Q2.arrival[x]);
+		temp[2] = to_string(Q2.duration[x]);
+		temp[3] = to_string(Q2.remaining[x]);
+		
+		if(!isEmpty()){
+			x = retHead();
+			temp2[0] = person[x];
+			temp2[1] = to_string(arrival[x]);
+			temp2[2] = to_string(duration[x]);
+			temp2[3] = to_string(remaining[x]);
+		}
+		
+		if(stoi(temp[1]) == time && flag == false){
+			cout<<time<<'\t'<<temp[0]<<'\t'<<temp[2]<<'\t'<<temp[3]<<'\t'<<"makeup"<<endl;
+		}
+		
+		while(dummy != Q2.retCount() && !isEmpty()){
+			for(int i = 0; i<quantum; i++){
+				time++;
+				temp[3] = to_string(stoi(temp[3]) - 1);
+				if(stoi(temp[3]) == 0){
+					x = Q2.retHead();
+					temp[0] = Q2.person[x];
+					temp[1] = to_string(Q2.arrival[x]);
+					temp[2] = to_string(Q2.duration[x]);
+					temp[3] = to_string(Q2.remaining[x]);
+					
+					cout<<time<<'\t'<<temp[0]<<'\t'<<temp[2]<<'\t'<<temp[3]<<'\t'<<"completed"<<endl;
+					
+					Q2.deQueue();
+					
+					if(!Q2.isEmpty()){
+						x = Q2.retHead();
+						temp[0] = Q2.person[x];
+						temp[1] = to_string(Q2.arrival[x]);
+						temp[2] = to_string(Q2.duration[x]);
+						temp[3] = to_string(Q2.remaining[x]);
+					}
+					break;
+				}
+				
+				cout<<time<<'\t'<<temp[0]<<'\t'<<temp[2]<<'\t'<<temp[3]<<'\t'<<"makeup"<<endl;
+				Q2.enQueue(temp);
+				Q2.deQueue();
+				x = Q2.retHead();
+				temp[0] = Q2.person[x];
+				temp[1] = to_string(Q2.arrival[x]);
+				temp[2] = to_string(Q2.duration[x]);
+				temp[3] = to_string(Q2.remaining[x]);
+				
+			}
+			dummy++;			
+		}
+		dummy = 0;
+		cout<<"test1"<<endl;
+		
+		if((time >= stoi(temp2[1])) && !isEmpty()){
+			flag = true;
+			Q2.enQueue(temp2);
+			cout<<"test2"<<endl;
+			while(dummy != (Q2.retCount()-1)){
+				x = Q2.retHead();
+				temp[0] = Q2.person[x];
+				temp[1] = to_string(Q2.arrival[x]);
+				temp[2] = to_string(Q2.duration[x]);
+				temp[3] = to_string(Q2.remaining[x]);
+				Q2.enQueue(temp);
+				Q2.deQueue();
+				dummy++;
+			}
+			cout<<"test3"<<endl;
+			dummy = 0;
+			
+			if(!isEmpty()){
+				deQueue();
+			}
+			
+			x = Q2.retHead();
+			temp[0] = Q2.person[x];
+			temp[1] = to_string(Q2.arrival[x]);
+			temp[2] = to_string(Q2.duration[x]);
+			temp[3] = to_string(Q2.remaining[x]);
+			
+			if(isEmpty()){
+				x = retHead();
+				temp2[0] = person[x];
+				temp2[1] = to_string(arrival[x]);
+				temp2[2] = to_string(duration[x]);
+				temp2[3] = to_string(remaining[x]);
+			}
+			
+			cout<<time<<'\t'<<temp[0]<<'\t'<<temp[2]<<'\t'<<temp[3]<<'\t'<<"makeup"<<endl;
+		
+		}
+		
+	}
+
+
+//  4/8/16
+
+if(stoi(newActor[2]) <= quantum){
+			durDummy = stoi(newActor[3]);
+			
+			for(int i = 0; i<quantum; i++){
+				
+				if(durDummy<0){
+					//Q2.deQueue();
+					break;
+				}
+				
+				durDummy--;
+	
+				cout<<time<<'\t'<<newActor[0]<<'\t'<<newActor[2]<<'\t'<<durDummy<<'\t';
+				
+				if(durDummy == 0){
+					cout<<"completed"<<endl;
+					breakCD++;
+					//Q2.deQueue();
+					time++;
+					break;
+				}
+				else if (durDummy > 0){
+					cout<<"makeup"<<endl;
+				}
+				
+				time++;
+			}
+		}
+		
+		else if(time<stoi(newActor[1]) && (!Q2.isEmpty()) ){
+			
+			x = Q2.retHead();
+			durDummy = Q2.remaining[x];
+			
+			for(int i = 0; i<quantum; i++){
+				
+				if(durDummy<0){
+					Q2.deQueue();
+					break;
+				}
+				
+				durDummy--;
+			
+				cout<<time<<'\t'<<Q2.person[x]<<'\t'<<Q2.duration[x]<<'\t'<<durDummy<<'\t';
+				
+				if(durDummy == 0){
+					cout<<"completed"<<endl;
+					breakCD++;
+					time++;
+					break;
+				}
+				else if (durDummy > 0){
+					cout<<"makeup"<<endl;
+				}
+				
+				time++;
+			}
+			
+			Q2.remaining[x] = durDummy;
+			
+			if(durDummy>0){
+				temp[0] = Q2.person[x];
+				temp[1] = to_string(Q2.arrival[x]);
+				temp[2] = to_string(Q2.duration[x]);
+				temp[3] = to_string(Q2.remaining[x]);
+				Q2.deQueue();
+				Q2.enQueue(temp);
+			}
+			else{
+				//cout<<"finished with "<<person[x]<<endl;
+				Q2.deQueue();
+			}
+			
+			
+		}
+		
+		//else if((stoi(newActor[2]) <= quantum) && (!Q2.isFull())
+		else if(!Q2.isFull()){
+			//Q2.enQueue(newActor);
+			//x = Q2.retHead();
+			durDummy = stoi(newActor[3]);
+			
+			for(int i = 0; i<quantum; i++){
+				
+				if(durDummy<0){
+					Q2.deQueue();
+					break;
+				}
+				
+				durDummy--;
+	
+				cout<<time<<'\t'<<newActor[0]<<'\t'<<newActor[2]<<'\t'<<durDummy<<'\t';
+				
+				if(durDummy == 0){
+					cout<<"completed"<<endl;
+					breakCD++;
+					Q2.deQueue();
+					time++;
+					break;
+				}
+				else if (durDummy > 0){
+					cout<<"makeup"<<endl;
+				}
+				
+				time++;
+			}
+			
+			newActor[3] = to_string(durDummy);
+			
+			if(durDummy>0){
+				Q2.enQueue(newActor);
+			}
+	
+		
+		}
+		
+		else if(Q2.isFull()){
+			cout<<"last case"<<endl;
+			x = Q2.retHead();
+			durDummy = Q2.remaining[x];
+			
+			for(int i = 0; i<quantum; i++){
+				
+				if(durDummy<0){
+					Q2.deQueue();
+					break;
+				}
+				
+				durDummy--;
+			
+				cout<<time<<'\t'<<Q2.person[x]<<'\t'<<Q2.duration[x]<<'\t'<<durDummy<<'\t';
+				
+				if(durDummy == 0){
+					cout<<"completed"<<endl;
+					breakCD++;
+					time++;
+					break;
+				}
+				else if (durDummy > 0){
+					cout<<"makeup"<<endl;
+				}
+				
+				time++;
+			}
+			
+			Q2.remaining[x] = durDummy;
+			
+			if(durDummy>0){
+				temp[0] = Q2.person[x];
+				temp[1] = to_string(Q2.arrival[x]);
+				temp[2] = to_string(Q2.duration[x]);
+				temp[3] = to_string(Q2.remaining[x]);
+				Q2.deQueue();
+				Q2.enQueue(temp);
+				
+			}
+			else{
+				//cout<<"finished with "<<person[x]<<endl;
+				Q2.deQueue();
+			}
+			
+		}

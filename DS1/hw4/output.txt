@@ -1,0 +1,20 @@
+0       waiting
+1       Meredith        4       makeup
+2       Meredith        4       makeup
+3       Meredith        4       makeup
+4       Meredith        4       completed
+5       waiting
+6       waiting
+7       Cristina        5       makeup
+8       Cristina        5       makeup
+9       Alex    2       makeup
+10      Alex    2       completed
+11      Cristina        5       makeup
+12      Cristina        5       makeup
+13      Izzie   3       makeup
+14      Izzie   3       makeup
+15      George  1       completed
+16      Cristina        5       completed
+17      relax
+18      relax
+19      Izzie   3       completed

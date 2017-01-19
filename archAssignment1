@@ -1,0 +1,83 @@
+
+##############
+#Deandre Hall#
+#PSID 1241692#
+##############
+
+.data
+inputA:	.asciiz "Please input integer A \n"
+inputB:	.asciiz "Please input integer B \n: "
+answer: .asciiz "Your answer is: "
+endl:	.asciiz "\n"
+
+	.align 2
+
+.text
+.globl main
+
+main:
+	li $v0, 4
+	la $a0, inputA
+	syscall #prints "Please input integer A: "
+	
+	li $v0, 5
+	syscall #accepts an int input
+	move $s0, $v0 #s0 contains A
+	
+	li $v0, 4
+	la $a0, inputB
+	syscall #prints "Please input integer B: "
+	
+	li $v0, 5
+	syscall #accepts an int input
+	move $s1, $v0#s1 ocntains B
+
+	move $t3,$s0 #copy of A
+	move $t7, $t3 #copy of A
+	
+
+recursiveStart:	
+	
+	beq $s1, 1, returnA #if B = 1, return A
+	beq $s1, 0, zeroB #if B=0, return 1
+	div $s2, $s1, 2
+	mfhi $s2
+	beq $s2, 1, oddB #checks if B is odd
+	beq $s2, 0, evenB #checks if B is even
+	
+	
+zeroB:
+	li $t7, 1
+	beq $zero, $zero, exit #if B = 1, return A
+	
+returnA:
+	move $t7, $s0
+	beq $zero, $zero, exit #if B=0, return 1
+
+oddB:
+	mul $t1, $t7, $t3 #A^A
+	move $t7, $t1 #t7 holds an updated copy of the multiplication
+	addi $s1, $s1, -1#subtract 1 from loop counter
+	bne $s1, 0, oddB#loop starts over if loopcounter != 0
+	move $t7, $t1
+	beq $s1, 0, exit#program ends when loop is finished
+	
+evenB:
+	mul $t1, $t7, $t3 #A^A
+	move $t7, $t1 #t7 holds an updated copy of the multiplication
+	addi $s1, $s1, -1 #subtract 1 from loop counter
+	bne $s1, 0, evenB#loop starts over if loopcounter != 0
+	move $t7, $t1
+	beq $s1, 0, exit#program ends when loop is finished
+
+exit:
+	
+	#move $t7, $t1
+	li $v0, 4
+	la $a0, answer #prints "your answer is"
+	syscall
+	li $v0, 1
+	move $a0, $t7
+	syscall
+	li $v0, 10
+	syscall 

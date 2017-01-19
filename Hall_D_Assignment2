@@ -1,0 +1,257 @@
+
+##############
+#Deandre Hall#
+#PSID 1241692#
+##############
+
+.data
+int1: .asciiz "Enter the first integer please: "
+int2: .asciiz "Enter the second integer please: "
+int3: .asciiz "Enter the third integer please: "
+
+greeting: .asciiz "\n Welcome to the 4 function calculator"
+sayadd: .asciiz "\n 1 - Addition"
+saysub: .asciiz "\n 2 - Subtraction"
+saymult: .asciiz "\n 3 - Multiplication"
+saydiv: .asciiz "\n 4 - Division"
+sayexit: .asciiz "\n 9 - Exit \n"
+
+thesum: .asciiz "\n The sum of "
+thediff: .asciiz "\n The difference of "
+theprod: .asciiz "\n The product of "
+thequot: .asciiz "\n The quotent of "
+
+comma: .asciiz " ,  "
+commaAnd: .asciiz " , and,  "
+is: .asciiz " is "
+period: .asciiz "."
+remainder: .asciiz " with remainder "
+
+.text
+
+main:
+
+    #t0-to hold 1st int
+    #t1-to hold 2nd int
+    #t2- to hold 3rd int
+    #s0- used to hold the sum of t$1 and t$2
+ 	
+ 	#prints menu
+ 	li $v0, 4
+ 	la $a0, greeting
+ 	syscall
+ 	la $a0, sayadd
+ 	syscall
+ 	la $a0, saysub
+ 	syscall
+ 	la $a0, saymult
+ 	syscall
+ 	la $a0, saydiv
+ 	syscall
+ 	la $a0, sayexit
+ 	syscall
+ 	
+ 	li $v0, 5
+ 	syscall
+ 	move $t6, $v0
+ 	
+ 	li $t7, 9 #if user enters 9, program ends immediently 
+ 	beq $t7, $t6, Done
+ 	
+ 	li $v0, 4 #call for 1st number
+        la $a0, int1  #print
+        syscall
+
+        li $v0, 5 #input 1st number
+        syscall
+        move $t0, $v0  
+
+  	li $v0, 4 #call for 2nd number
+        la $a0, int1  #print
+        syscall
+
+        li $v0, 5 #input second number
+        syscall
+        move $t1, $v0  
+    
+    	li $v0, 4 #call for 3rd number
+        la $a0, int3  #print
+        syscall
+
+        li $v0, 5 #input 3rd number
+        syscall
+        move $t2, $v0
+ 	
+ 	#determines where user is sent depending on their output
+ 	li $t7, 1
+ 	beq $t6, $t7, Addition
+ 	li $t7, 2
+ 	beq $t6, $t7, Subtraction
+ 	li $t7, 3
+ 	beq $t6, $t7, Multiplication
+ 	li $t7, 4
+ 	beq $t6, $t7, Division
+ 	
+
+	##Addition
+	Addition: #does addition, prints output, returns to menu
+	
+        add $s0, $t1, $t0 #add num1 + num2 to s0
+        add $s0, $s0, $t2 #add t2 + s0 to s0
+        
+        li $v0, 4
+    	la $a0, thesum   
+    	syscall
+    	li $v0, 1
+    	move $a0, $t0
+    	syscall
+    	li $v0, 4
+    	la $a0, comma   
+	syscall
+    	li $v0, 1
+    	move $a0, $t1
+    	syscall
+    	li $v0, 4
+    	la $a0, commaAnd   
+    	syscall
+    	li $v0, 1
+    	move $a0, $t2
+    	syscall
+    	li $v0, 4
+    	la $a0, is   
+    	syscall
+    	li $v0, 1
+    	move $a0, $s0
+    	syscall
+    	li $v0, 4
+    	la $a0, period   
+    	syscall
+        
+        beq $t6, $t7, main
+          
+        ##############################################
+        Subtraction: # does subtraction, prints output, returns to menu
+        li $t4, -1	#t4 stores -1 to be used for multiplication
+        
+        mult $t1, $t4
+        mflo $s1
+        mult $t2, $t4
+        mflo $s2
+        
+        add $t3, $s1, $s2
+        add $s3, $t0, $t3 #s3 holds the diff of num1 - num2 - num3
+        
+        li $v0, 4
+    	la $a0, thediff  
+    	syscall
+    	li $v0, 1
+    	move $a0, $t0
+    	syscall
+    	li $v0, 4
+    	la $a0, comma   
+    	syscall
+    	li $v0, 1
+    	move $a0, $t1
+    	syscall
+    	li $v0, 4
+    	la $a0, commaAnd   
+    	syscall
+    	li $v0, 1
+    	move $a0, $t2
+    	syscall
+    	li $v0, 4
+    	la $a0, is   
+    	syscall
+    	li $v0, 1
+    	move $a0, $s3
+    	syscall
+    	li $v0, 4
+    	la $a0, period   
+    	syscall
+    	
+    	beq $t6, $t7, main
+        
+        ##############################################
+        Multiplication: #does multiplication, prints output, returns to menu
+        mult $t0, $t1
+        mflo $t5
+        mult $t5, $t2
+        mflo $s4 #s4 holds (num1)(num2)(num3)
+        
+        li $v0, 4
+    	la $a0, theprod 
+    	syscall
+    	li $v0, 1
+    	move $a0, $t0
+    	syscall
+    	li $v0, 4
+    	la $a0, comma   
+    	syscall
+    	li $v0, 1
+   	move $a0, $t1
+    	syscall
+    	li $v0, 4
+    	la $a0, commaAnd   
+    	syscall
+    	li $v0, 1
+    	move $a0, $t2
+    	syscall
+    	li $v0, 4
+    	la $a0, is   
+    	syscall
+    	li $v0, 1
+   	move $a0, $s4
+    	syscall
+    	li $v0, 4
+    	la $a0, period   
+    	syscall
+    	
+    	beq $t6, $t7, main
+        
+        ############################################
+        Division: #does division, prints output, returns to menu
+        
+        div $t0, $t1
+        mflo $s5 #holds (num1/num2) QUOTIENT
+        mfhi $s6 #holds num1 % num2   REMAINDER
+        
+	li $v0, 4
+    	la $a0, thequot   
+    	syscall
+    	li $v0, 1
+    	move $a0, $t0
+    	syscall
+    	li $v0, 4
+    	la $a0, comma   
+    	syscall
+    	li $v0, 1
+    	move $a0, $t1
+    	syscall
+    	li $v0, 4
+    	la $a0, commaAnd   
+    	syscall
+    	li $v0, 1
+    	move $a0, $t2
+    	syscall
+    	li $v0, 4
+    	la $a0, is   
+    	syscall
+    	li $v0, 1
+    	move $a0, $s5
+    	syscall
+    	li $v0, 4
+    	la $a0, remainder
+    	syscall
+    	li $v0, 1
+    	move $a0, $s6
+    	syscall
+    	li $v0, 4
+    	la $a0, period
+    	syscall
+    	
+    	beq $t6, $t7, main
+    
+Done:
+
+    li $v0, 10    #syscall to exit
+        syscall
